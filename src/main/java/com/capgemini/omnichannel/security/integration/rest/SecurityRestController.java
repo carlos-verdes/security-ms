@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 //TODO change exception handle using @ControllerAdvice
 public class SecurityRestController {
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
