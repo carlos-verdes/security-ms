@@ -1,9 +1,8 @@
-omnisession:
-  environments:
-    dev:
-      url: http://dev.bar.com
-      name: Developer Setup
-    prod:
-      url: http://foo.bar.com
-      name: My Cool App
-# testProperty: from YAML
+usersMock:
+  users:
+    admin:
+      id: admin
+      password: secret
+    cinfante:
+      id: cinfantes
+      password: secret
