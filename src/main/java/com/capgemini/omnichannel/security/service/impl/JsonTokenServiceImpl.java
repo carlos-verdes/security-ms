@@ -1,81 +1,67 @@
 package com.capgemini.omnichannel.security.service.impl;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.MacProvider;
-import io.jsonwebtoken.impl.crypto.RsaProvider;
-import io.jsonwebtoken.impl.crypto.RsaSignatureValidator;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 import java.security.KeyPair;
-import java.security.Principal;
-import java.security.interfaces.RSAKey;
-import java.util.List;
 
-import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.capgemini.omnichannel.security.dto.TokenInfo;
+import com.capgemini.omnichannel.security.exception.InvalidTokenException;
 import com.capgemini.omnichannel.security.service.TokenService;
+import com.capgemini.omnichannel.security.util.SecurityUtils;
 
+@Service	
 public class JsonTokenServiceImpl implements TokenService {
 
-	@Override
-	public String getResourceId(String resource) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Autowired
+	private KeyPair rsaKeyPair;
+
+	@Autowired
+	private JwtParser jwsParser;
 
 	@Override
-	public List<String> getResources(Principal principal) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String createNewToken(TokenInfo tokenInfo) {
+		String token = null;
 
-	@Override
-	public String getResourceById(String id, Principal principal) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <S extends String> S updateResource(String id, S value, Principal principal) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <S extends String> S insertResource(String id, S value, Principal principal) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Generates a token from the string received
-	 * 
-	 * @param user
-	 * @return
-	 */
-	private static String generateToken(String user) {
-		String token;
-		KeyPair keyPair = RsaProvider.generateKeyPair();
-		System.out.println(String.format("private key \n %s", keyPair.getPrivate().toString()));
-		System.out.println(String.format("public key \n %s", keyPair.getPrivate().toString()));
-
-		token = Jwts.builder().setSubject(user).signWith(SignatureAlgorithm.RS256, keyPair.getPrivate()).compact();
-
-		Jws<Claims> parsedtoken = Jwts.parser().setSigningKey(keyPair.getPublic()).parseClaimsJws(token);
-
-		System.out.println(String.format("subject: %s", parsedtoken.getBody().getSubject()));
+		if (tokenInfo != null && tokenInfo.getSubject() != null) {
+			token = Jwts.builder().setSubject(tokenInfo.getSubject())
+					.signWith(SignatureAlgorithm.RS256, rsaKeyPair.getPrivate()).compact();
+		}
 
 		return token;
 	}
 
-	public static void main(String[] args) {
-		
-		String user="cinfantes";
-		
-		generateToken(user);
+	@Override
+	public TokenInfo validateToken(String token) throws InvalidTokenException {
+
+		Jws<Claims> jwsClaims;
+		try {
+			jwsClaims = Jwts.parser().setSigningKey(rsaKeyPair.getPublic()).parseClaimsJws(token);
+		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+				| IllegalArgumentException e) {
+			throw new InvalidTokenException(token, e);
+		}
+
+		TokenInfo tokenInfo = SecurityUtils.createTokeninfoFromJws(jwsClaims);
+		return tokenInfo;
 	}
-	
+
+	public KeyPair getRsaKeyPair() {
+		return rsaKeyPair;
+	}
+
+	public void setRsaKeyPair(KeyPair rsaKeyPair) {
+		this.rsaKeyPair = rsaKeyPair;
+	}
+
 }
