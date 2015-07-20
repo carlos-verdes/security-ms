@@ -20,7 +20,7 @@ import com.capgemini.omnichannel.security.exception.InvalidTokenException;
 import com.capgemini.omnichannel.security.service.TokenService;
 import com.capgemini.omnichannel.security.util.SecurityUtils;
 
-@Service	
+@Service
 public class JsonTokenServiceImpl implements TokenService {
 
 	@Autowired

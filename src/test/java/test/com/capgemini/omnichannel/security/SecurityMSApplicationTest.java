@@ -1,4 +1,4 @@
-package com.capgemini.omnichannel.security;
+package test.com.capgemini.omnichannel.security;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
