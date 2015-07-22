@@ -16,10 +16,13 @@ This first implementation authenticate with a mock with the next credential:
 admin/secret
 
 So the next BASIC Auth header should be added with the POST operation:
+```
 Authorization Basic YWRtaW46c2VjcmV0
+```
 
 ##Examples:
 
+Request:
 ```
 POST /tokens
 Authorization Basic YWRtaW46c2VjcmV0
@@ -31,6 +34,8 @@ Response:
   "data": "eyJhb..."
 }
 ```
+
+Request:
 ```
 PUT /tokens
 eyJhb...
