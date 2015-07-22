@@ -28,7 +28,7 @@ public class SecurityRestController {
 	@Autowired
 	private TokenService tokenService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.POST)
 	public BaseRestDTO<String> getNewToken(Principal principal) {
 
 		TokenInfo tokenInfo = new TokenInfo(principal.getName());
