@@ -17,7 +17,7 @@ admin/secret
 
 So the next BASIC Auth header should be added with the POST operation:
 ```
-Authorization Basic YWRtaW46c2VjcmV0
+Authorization: Basic YWRtaW46c2VjcmV0
 ```
 
 ##Examples:
@@ -25,7 +25,7 @@ Authorization Basic YWRtaW46c2VjcmV0
 Request:
 ```
 POST /tokens
-Authorization Basic YWRtaW46c2VjcmV0
+Authorization: Basic YWRtaW46c2VjcmV0
 ```
 
 Response:
